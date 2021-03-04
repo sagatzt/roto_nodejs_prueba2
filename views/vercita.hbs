@@ -1,0 +1,20 @@
+<h1>Ver cita</h1>
+<p>Esta es la cita:</p>
+<p>{{cita.nombre}} {{cita.apellidos}} {{cita.fecha}} {{cita.hora}} 
+    <a href="javascript:void(0)" onclick="deleteCita({{cita.id}})">Eliminar</a> | 
+    <a href="/citas/modificar/{{cita.id}}">Modificar</a>
+</p>
+<a href="/citas/nueva">Volver atrás</a>
+
+<script>
+    function deleteCita(id){    
+        fetch(`/citas/eliminar/${id}`)
+            .then(res => res.json())
+            .then(cita => {
+                alert("Cita eliminada")
+                window.location.href="/citas/nueva"
+            })
+        
+    }
+
+</script>

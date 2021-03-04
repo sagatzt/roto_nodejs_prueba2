@@ -1,0 +1,101 @@
+<h1>Nueva cita</h1>
+
+<div class="row">
+    <div class="col-10">
+        <input name="nombre" id="nombre" placeholder="nombre">
+        <input name="nombre" id="nombre" placeholder="apellidos">
+        <input type="date" name="fecha" id="fecha" placeholder="fecha">
+        <input type="time" name="hora" id="hora" placeholder="hora">
+        <input type="button" class="btn btn-info" value="Guardar" id="guardar">
+    </div>
+    <div class="col-10">
+        <div class="container-loader d-flex justify-content-center align-items-center">
+            <div class="loader"></div> 
+        </div>
+
+        <ul class="resultado"></ul>
+         
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+
+<script>
+    let loader=document.querySelector(".container-loader")    
+    obtenerCitas()
+
+    function obtenerCitas(){
+        loader.style.visibility='visible'
+        fetch('/citas/listado')
+            .then(res => res.json())
+            .then(citas => showCitas(citas))
+    }
+
+    document.querySelector("guardar").onclick = () => {
+        loader.style.visibility='visible'
+        fetch('/citas/guardar', {
+            method: 'GET',
+            body: {
+                nombre: nombre.value,
+                apellidos: apellidos.value,
+                fecha: fecha.value,
+                hora: hora.value
+            },
+            headers: { 'Content-Type': 'Aplication/json' }
+        })
+            .then(res => res.json())
+            .then(citas => showCitas(citas))
+
+    }
+
+    function showCitas(citas){
+        let resultado = document.querySelector('.resultado')
+        resultado.innerHTML = ""
+        citas.forEach(cita => {
+            let li = document.createElement("li")
+            li.innerHTML = `id: ${cita.id} - ${cita.nombre} ${cita.apellidos} (${cita.fecha}) ${cita.hora} 
+            <a href="javascript:void(0)" onclick="deleteCita()">Eliminar</a> | 
+            <a href="/citas/modificar/${cita.id}">Modificar</a> | 
+            <a href="/citas/detalle/${cita.id}">Ver detalle</a>`
+            
+            resultado.appendChild(li)
+        })
+        loader.style.visibility='hidden'
+    }
+
+    function deleteCita(id){    
+        loader.style.visibility='visible'
+        fetch(`/citas/eliminar`)
+            .then(res => res.json())
+            .then(cita => {
+                obtenerCitas()
+                alert("Cita eliminada")
+            })
+        
+    }
+</script>
+
+<style>
+.container-loader{
+    visibility: hidden;
+    width: 100%;
+    height: 100%;
+    background: #dfdfdf;
+    text-align: center;
+    position: absolute;
+}
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}    
+</style>

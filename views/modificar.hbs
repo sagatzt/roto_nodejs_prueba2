@@ -1,0 +1,13 @@
+<h1>Modificar cita</h1>
+<form method="post" action="/citas/modificar">
+    <p>Id:<input type="text" name="id" value="{{cita.id}}" disabled></p>
+    <p>Nombre:<input type="text" name="nombre" value="{{cita.nombre}}"></p>
+    <p>Apellidos:<input type="text" name="apellidos" value="{{cita.apellidos}}"></p>
+    <p>Fecha:<input type="text" name="fecha" value="{{cita.fecha}}"></p>
+    <p>Hora:<input type="text" name="hora" value="{{cita.hora}}"></p>
+
+    <p>
+        <input type="button" id="btn-save" class="btn btn-primary" value="Guardar">
+        <a href="/citas/nueva" class="btn btn-danger">Volver </a>
+    </p>
+</form>
